@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "cypress": "^6.0.0"
+  },
+  "scripts": 
+  {
+    "e2e": "cypress open"
+  }
+  
+ 
+}
