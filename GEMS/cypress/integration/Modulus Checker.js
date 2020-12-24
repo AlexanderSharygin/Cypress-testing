@@ -1,70 +1,33 @@
 
-let devUrl = 'https://simplicity-crm.blueberrytest.com/';
-let selectors = 
+let DevUrl = 'https://simplicity-crm.blueberrytest.com/';
+let Selectors = 
 {
 code1: '#sortCode1',
 code2: '#sortCode2',
 code3: '#sortCode3',
 accountNo: '#lblAccountNo',
-saveButtonText: 'Save',
-LockScreen: '#simplicity',
-cookieBannerButton: "Button[ng-click='CookieBannerDirCtrl.HideBanner()']",
-}
-
-function SelectUmbrellaToTest()
-{
-     // Go to Umbrellas Page and Edit First Umbrella in the grid
-    cy.get(selectors.cookieBannerButton).should("be.visible").click(). should('not.be.visible'); 
-cy.get("ul[ng-controller='MenuCtrl'").children().last().wait(500).click().should('have.class', 'k-state-border-right');
-cy.get("div.k-animation-container").last().should('be.visible').children().should('be.visible').children().first().rightclick().should('have.class', 'k-state-border-right');
-cy.get("div.k-animation-container").last().should('be.visible').children().should('be.visible').children().first().next().click();
-cy.get(selectors.LockScreen).should('have.class', 'pace-done');   
-cy.get('tbody[role=rowgroup]').should('exist').should('be.visible').children().first().within(tr=>{
-                cy.get('a.cell-button').contains('Edit').click().should('not.exist');
-             });   
- cy.get(selectors.LockScreen).should('have.class', 'pace-done');      
+spinnerScreen: '#simplicity',
 
 }
-function CheckTrueCase(caseId, code, accountNumber)
-{   
-    cy.log('Case {0}', caseId);
-    cy.get(selectors.code1).clear().type(code.slice(0,3));
-    cy.get(selectors.code2).clear().type(code.slice(2,5));
-    cy.get(selectors.code3).clear().type(code.slice(4));
-    cy.get(selectors.accountNo).clear().type(accountNumber);
-    cy.get('button').contains(selectors.saveButtonText).click();  
-    cy.get('div.k-notify-window-content').should('exist').should('be.visible').should("contain", "Umbrella has been successfully updated");
-    cy.get('div.k-notify-window').should('not.exist');
-}
-function CheckFalseCase(caseId, code, accountNumber)
-{  
-cy.log('Case {0}', caseId);
-
-cy.get(selectors.code1).clear().type(code.slice(0,3));
-cy.get(selectors.code2).clear().type(code.slice(2,5));
-cy.get(selectors.code3).clear().type(code.slice(4));
-cy.get(selectors.accountNo).clear().type(accountNumber);
-cy.get('button').contains(selectors.saveButtonText).click();  
-cy.get(selectors.code1).should('have.class', 'ng-invalid');
-cy.get(selectors.code2).should('have.class', 'ng-invalid');
-cy.get(selectors.code3).should('have.class', 'ng-invalid');
-cy.get(selectors.accountNo).should('have.class', 'ng-invalid');
-}
-
 
 describe("Modulus checker testing", ()=>{
 before("LoginToTestSite", ()=>
 {
 cy.clearCookies();
 cy.clearLocalStorage();
-cy.visit(devUrl);
+cy.visit(DevUrl);
 cy.fixture("credits.json").then(login=>
     {
-      cy.get(selectors.LockScreen).should('have.class', 'pace-done');  
-      cy.get('#loginPageUsername').should('exist').type(login.login);
-      cy.get("#loginPagePassword").should('exist').type(login.password, {log: false});
-      cy.get("Button[Type='Submit']").click().should('not.exist'); 
-      cy.get(selectors.LockScreen).should('have.class', 'pace-done');
+      let spinnerScreen = cy.get(Selectors.spinnerScreen);
+      spinnerScreen.should('have.class', 'pace-done');  
+      let loginInput = cy.get('#loginPageUsername');
+      loginInput.should('exist').type(login.login);
+      let passwordInput = cy.get("#loginPagePassword");
+      passwordInput.should('exist').type(login.password, {log: false});
+      let loginButton = cy.get("Button[Type='Submit']");
+      loginButton.click().should('not.exist'); 
+      spinnerScreen = cy.get(Selectors.spinnerScreen);
+      spinnerScreen.should('have.class', 'pace-done');
       cy.wait(3000);
 
     });   
@@ -114,3 +77,73 @@ CheckTrueCase(34, '180002', '00000190');
 
 
 });
+
+
+
+function SelectUmbrellaToTest()
+{
+     // Go to Umbrellas Page and Edit First Umbrella in the grid
+let cookieBannerButton =  cy.get("button[ng-click='CookieBannerDirCtrl.HideBanner()']").should("be.visible");
+cookieBannerButton.click().should('not.be.visible'); 
+let administratioMenuItem = cy.get("ul[ng-controller='MenuCtrl'").children().last().wait(500);
+administratioMenuItem.click().should('have.class', 'k-state-border-right');
+let manageAgenciesMenuItem = cy.get("div.k-animation-container").last().should('be.visible').children().should('be.visible').children().first();
+manageAgenciesMenuItem.rightclick().should('have.class', 'k-state-border-right');
+let manageUmbrellasMenuItem = cy.get("div.k-animation-container").last().should('be.visible').children().should('be.visible').children().first().next();
+manageUmbrellasMenuItem.click();
+let spinnerScreen = cy.get(Selectors.spinnerScreen)
+spinnerScreen.should('have.class', 'pace-done');   
+let firstRowGrid = cy.get('tbody[role=rowgroup]').should('exist').should('be.visible').children().first();
+firstRowGrid.within(tr=>
+    {
+                cy.get('a.cell-button').contains('Edit').click().should('not.exist');
+    });   
+spinnerScreen = cy.get(Selectors.spinnerScreen);
+spinnerScreen.should('have.class', 'pace-done');      
+
+}
+
+
+
+function CheckTrueCase(caseId, code, accountNumber)
+{   
+cy.log('Case'+caseId);
+let codeFirstInput = cy.get(Selectors.code1);
+codeFirstInput.clear().type(code.slice(0,3));
+let codeSecondInput=cy.get(Selectors.code2);
+codeSecondInput.clear().type(code.slice(2,5));
+let codeThirdInput=cy.get(Selectors.code3);
+codeThirdInput.clear().type(code.slice(4));
+let accountNoInput = cy.get(Selectors.accountNo);
+accountNoInput.clear().type(accountNumber);
+let saveButton = cy.get('button').contains('Save');
+saveButton.click();  
+let successMessage = cy.get('div.k-notify-window-content').should('exist').should('be.visible');
+successMessage.should("contain", "Umbrella has been successfully updated");
+let successPopUp= cy.get('div.k-notify-window');
+successPopUp.should('not.exist');
+}
+
+
+function CheckFalseCase(caseId, code, accountNumber)
+{  
+cy.log('Case'+caseId);
+let codeFirstInput = cy.get(Selectors.code1);
+codeFirstInput.clear().type(code.slice(0,3));
+let codeSecondInput=cy.get(Selectors.code2);
+codeSecondInput.clear().type(code.slice(2,5));
+let codeThirdInput=cy.get(Selectors.code3);
+codeThirdInput.clear().type(code.slice(4));
+let accountNoInput = cy.get(Selectors.accountNo);
+accountNoInput.clear().type(accountNumber);
+let saveButton = cy.get('button').contains('Save');
+saveButton.click();
+codeFirstInput = cy.get(Selectors.code1);
+codeFirstInput.should('have.class', 'ng-invalid');
+codeSecondInput=cy.get(Selectors.code2);
+codeSecondInput.should('have.class', 'ng-invalid');
+codeThirdInput=cy.get(Selectors.code3);
+codeThirdInput.should('have.class', 'ng-invalid');
+accountNoInput = cy.get(Selectors.accountNo);
+accountNoInput.should('have.class', 'ng-invalid');
+}

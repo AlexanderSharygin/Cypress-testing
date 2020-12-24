@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\cypress",
+    "\\cypress\\integration"
   ],
-  "SelectedNode": "\\package.json",
+  "SelectedNode": "\\cypress\\integration\\Modulus Checker.js",
   "PreviewInSolutionExplorer": false
 }
