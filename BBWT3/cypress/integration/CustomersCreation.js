@@ -36,8 +36,10 @@ it('Create customer', () => {
   cy.get('div').contains('Customer created.').should('not.exist');
   cy.get('th#header-id').click();
   cy.get('i.pi-spinner').should('not.exist');
+  cy.get('th#header-id').should('have.attr', 'aria-sort','ascending')
   cy.get('th#header-id').click();
   cy.get('i.pi-spinner').should('not.exist');
+  cy.get('th#header-id').should('have.attr', 'aria-sort','descending')
   cy.get('tbody.p-datatable-tbody').within(tbody=>
     {
       cy.get('tr').first().within(tr=>
@@ -104,20 +106,19 @@ it('Create order', () => {
           cy.get('div').contains('Order created.').should('be.exist');
           cy.get('div').contains('Order created.').should('not.exist');
           cy.get('th#header-id').click();
-          cy.get('i.pi-spinner').should('not.exist');
-          cy.get('th#header-id').click();
-          cy.get('i.pi-spinner').should('not.exist');
+  cy.get('i.pi-spinner').should('not.exist');
+  cy.get('th#header-id').should('have.attr', 'aria-sort','ascending')
+  cy.get('th#header-id').click();
+  cy.get('i.pi-spinner').should('not.exist');
+  cy.get('th#header-id').should('have.attr', 'aria-sort','descending')
          
           cy.get('tbody.p-datatable-tbody').within(tbody=>
             {
+              
+            
               cy.get('tr').first().within(tr=>
                 {
-                  cy.get('td').first().find('span').then((span) => {
-
-                    span.text=custCode;
-              
-                
-               });    
+                  cy.get('td').find('span.p-column-title').contains('ID').parent().find('span').contains(custCode);    
                 });
         
         
@@ -125,6 +126,49 @@ it('Create order', () => {
     
 });
 
+
+it('Create organization', () => {
+ 
+  cy.get('span[rte="14t"]').contains('Demo Pages').parent().parent().click().should('have.class', 'active-menuitem');
+  cy.get('span[rte="14t"]').contains('Northwind').parent().parent().click().should('have.class', 'active-menuitem');
+  cy.get('span[rte="14n"]').contains('Organizations').parent().parent().click();
+ cy.get('div.splash-screen').should('not.exist');
+  cy.get('table[role="grid"]').should('be.visible');
+  cy.get('i.pi-spinner').should('not.exist');
+  cy.get('p-button[rte="3M"]').click();  
+  cy.get('span').contains('Create').parent().parent().should('be.visible');
+  let name=GetRandomString(5);
+  cy.get('input#dialognameid').type(name);
+  cy.get('span.p-button-label').contains('Save').parent().click(); 
+  cy.get('div').contains('Organization created.').should('be.exist');
+  cy.get('div').contains('Organization created.').should('not.exist');
+  cy.get('th#header-id_original').click();
+  cy.get('i.pi-spinner').should('not.exist');
+  cy.get('th#header-id_original').should('have.attr', 'aria-sort','ascending')
+  cy.get('th#header-id_original').click();
+  cy.get('i.pi-spinner').should('not.exist');
+  cy.get('th#header-id_original').should('have.attr', 'aria-sort','descending')
+  cy.get('tbody.p-datatable-tbody').within(tbody=>
+    {
+      cy.get('tr').first().within(()=>
+        {
+          cy.get('td').find('span.p-column-title').contains('Name').parent().find('span').contains(name);          
+          cy.get('span').contains('Delete').parent().click();
+           
+       });    
+        });
+        cy.get('span').contains('Confirm Action').parent().parent().should('be.visible');
+        cy.get('button[label="Yes"]').click();
+        cy.get('div').contains('Organization deleted.').should('be.exist');
+        cy.get('div').contains('Organization deleted.').should('not.exist');
+
+
+
+
+ 
+    
+
+});
 
 function GetRandomString(lengt) {
   var text = "";
