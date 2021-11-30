@@ -1,0 +1,22 @@
+{
+  "name": "BBWT_Test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cypress": "^6.3.0",
+    "save-dev": "^0.0.1-security"
+  },
+  "scripts": {
+    "console": "cypress open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^6.1.0",
+    "save-dev": "^0.0.1-security"
+  }
+ 
+}
